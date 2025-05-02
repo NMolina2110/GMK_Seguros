@@ -12,7 +12,7 @@ const Restablecer = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Evita que se recargue la página
 
-    // Aquí iría la lógica para enviar el enlace (simulado por ahora)
+    // Enviar el enlace (simulado por ahora)
     setMensaje("Se ha enviado un enlace de recuperación a tu correo.");
   };
 

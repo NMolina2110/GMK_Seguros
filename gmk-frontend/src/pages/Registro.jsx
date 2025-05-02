@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.jpg";
-import "../styles/Login.css"; // Usamos este estilo para  consistencia visual
+import "../styles/Login.css"; // Estilo
 
 // Lista de ciudades de Colombia 
 const ciudadesColombia = [
@@ -42,36 +42,48 @@ const Registro = () => {
     setMensaje("🔄 Puedes modificar los datos arriba.");
   };
 
-    // Validar que las contraseñas coincidan
+      // Validar y enviar los datos al backend
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validación: contraseñas deben coincidir
     if (datos.contrasena !== datos.confirmarContrasena) {
       setMensaje("❌ Las contraseñas no coinciden.");
       return;
     }
 
-     // Validar datos y simular el envío del formulario
-     const handleSubmit = (e) => {
-        e.preventDefault();
-    
-        // Validar que las contraseñas coincidan
-        if (datos.contrasena !== datos.confirmarContrasena) {
-          setMensaje("❌ Las contraseñas no coinciden.");
-          return;
-        }
-    
-        // Validar que todos los campos estén llenos
-        for (let campo in datos) {
-          if (!datos[campo]) {
-            setMensaje("❌ Por favor, completa todos los campos.");
-            return;
-          }
-        }
-    
-        // Si todo está bien
+    // Validación: todos los campos deben estar llenos
+    for (let campo in datos) {
+      if (!datos[campo]) {
+        setMensaje("❌ Por favor, completa todos los campos.");
+        return;
+      }
+    }
+
+    try {
+      const respuesta = await fetch("http://localhost:3000/api/usuarios/registrar", {
+
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      if (respuesta.ok) {
         setMensaje("✅ Registro exitoso.");
         setTimeout(() => {
-          navigate("/"); // Redirige al inicio después de 2 segundos
+          navigate("/"); // Redirige después de 2 segundos
         }, 2000);
-      };
+      } else {
+        const errorData = await respuesta.json();
+        setMensaje(`❌ Error al registrar: ${errorData.message || "Error desconocido."}`);
+      }
+    } catch (error) {
+      console.error("Error de red:", error);
+      setMensaje("❌ Error al conectar con el servidor.");
+    }
+  };
 
   return (
     <main style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "2rem" }}>

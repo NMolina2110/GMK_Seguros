@@ -30,8 +30,10 @@ function Contacto() {
       return;
     }
 
+    setEstado({ mensaje: 'Enviando mensaje...', exito: null });
+    
     try {
-      const response = await fetch("http://localhost:8080/api/contacto", {
+      const response = await fetch("http://localhost:3001/api/contacto", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formulario)

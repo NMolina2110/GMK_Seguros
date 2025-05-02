@@ -6,4 +6,4 @@ router.get('/vehiculo', segurosController.consultarSeguroVehiculo);
 router.get('/vida', segurosController.consultarSeguroVida);
 
 module.exports = router;
-// Este archivo define las rutas para la gestión de seguros en la API de GMK Seguros.
+// Rutas gestión de seguros API de GMK Seguros.

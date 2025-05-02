@@ -9,41 +9,34 @@ const ConsultaTransporte = () => {
   const [resultado, setResultado] = useState(null);
   const [mensajeError, setMensajeError] = useState('');
 
-  const realizarConsulta = () => {
+  const realizarConsulta = async () => {
     if (!dato.trim()) {
       setMensajeError('Por favor ingresa el dato solicitado');
       setResultado(null);
       return;
     }
-
-    // Simulación de datos de consulta
-    if (tipoBusqueda === 'placa' && dato === 'ABC123') {
-      setResultado({
-        aseguradora: 'GMK Seguros',
-        telefono: '3101234567',
-        numeroPoliza: 'TR-998877',
-        tipoVehiculo: 'Camión',
-        vencimiento: '2025-07-15',
-        estadoPagos: 'Al día',
-        proximoPago: '2025-06-15'
-      });
+  
+    try {
+      let url = '';
+  
+      if (tipoBusqueda === 'placa') {
+        url = `http://localhost:3001/api/seguros/vehiculo?placa=${dato}`;
+      } else {
+        url = `http://localhost:3001/api/seguros/vida?documento=${dato}`;
+      }
+  
+      const response = await fetch(url);
+      const data = await response.json();
+  
+      setResultado(data);
       setMensajeError('');
-    } else if (tipoBusqueda === 'documento' && dato === '123456789') {
-      setResultado({
-        aseguradora: 'GMK Seguros',
-        telefono: '3109876543',
-        numeroPoliza: 'TR-112233',
-        tipoVehiculo: 'Automóvil',
-        vencimiento: '2025-10-01',
-        estadoPagos: 'En mora',
-        proximoPago: '2025-04-30'
-      });
-      setMensajeError('');
-    } else {
+    } catch (error) {
+      console.error('Error al consultar:', error);
+      setMensajeError('Error al consultar el seguro');
       setResultado(null);
-      setMensajeError('No se encontró información con los datos ingresados.');
     }
   };
+  
 
   return (
     <div>
@@ -102,18 +95,19 @@ const ConsultaTransporte = () => {
           <p style={{ color: 'red', marginTop: '1rem' }}>{mensajeError}</p>
         )}
   
-        {resultado && (
-          <div className="resultado-consulta">
-            <h2>Resultado:</h2>
-            <p><strong>Aseguradora:</strong> {resultado.aseguradora}</p>
-            <p><strong>Teléfono:</strong> {resultado.telefono}</p>
-            <p><strong>Número de Póliza:</strong> {resultado.numeroPoliza}</p>
-            <p><strong>Tipo de Vehículo:</strong> {resultado.tipoVehiculo}</p>
-            <p><strong>Fecha de Vencimiento:</strong> {resultado.vencimiento}</p>
-            <p><strong>Estado de Pagos:</strong> {resultado.estadoPagos}</p>
-            <p><strong>Próximo Pago:</strong> {resultado.proximoPago}</p>
-          </div>
-        )}
+  {resultado && (
+  <div className="resultado-consulta">
+    <h2>Resultado:</h2>
+    <p><strong>Aseguradora:</strong> {resultado.aseguradora}</p>
+    <p><strong>Teléfono:</strong> {resultado.telefono}</p>
+    <p><strong>Número de Póliza:</strong> {resultado.numeroPoliza}</p>
+    <p><strong>Tipo de Vehículo:</strong> {resultado.tipoVehiculo}</p>
+    <p><strong>Fecha de Vencimiento:</strong> {resultado.vencimiento}</p>
+    <p><strong>Estado de Pagos:</strong> {resultado.estadoPagos}</p>
+    <p><strong>Próximo Pago:</strong> {resultado.proximoPago}</p>
+  </div>
+)}
+
   
         <br />
         <Link to="/usuario">
