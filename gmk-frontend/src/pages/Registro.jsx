@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.jpg";
 import "../styles/Login.css"; // Estilo
 
+
 // Lista de ciudades de Colombia 
 const ciudadesColombia = [
   "Bogotá", "Medellín", "Cali", "Barranquilla", "Cartagena", "Bucaramanga",
@@ -43,7 +44,7 @@ const Registro = () => {
   };
 
       // Validar y enviar los datos al backend
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validación: contraseñas deben coincidir
@@ -60,24 +61,37 @@ const Registro = () => {
       }
     }
 
-    try {
-      const respuesta = await fetch("http://localhost:3000/api/usuarios/registrar", {
+    // Renombrar los campos para que coincidan con los esperados por el backend
+    const datosBackend = {
+      nombres: datos.nombres,
+      apellidos: datos.apellidos,
+      tipo_documento: datos.tipoDocumento,
+      numero_identidad: datos.numeroIdentidad,
+      fecha_nacimiento: datos.fechaNacimiento,
+      telefono: datos.telefono,
+      correo: datos.correo,
+      ciudad: datos.ciudad,
+      contrasena: datos.contrasena,
+      perfil_usuario: datos.perfilUsuario
+    };
 
+    try {
+      const respuesta = await fetch("http://localhost:3001/api/usuarios/registrar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(datos)
+        body: JSON.stringify(datosBackend)
       });
 
       if (respuesta.ok) {
         setMensaje("✅ Registro exitoso.");
         setTimeout(() => {
-          navigate("/"); // Redirige después de 2 segundos
+          navigate("/login"); // Redirige después de 2 segundos
         }, 2000);
       } else {
         const errorData = await respuesta.json();
-        setMensaje(`❌ Error al registrar: ${errorData.message || "Error desconocido."}`);
+        setMensaje(`❌ Error al registrar: ${errorData.mensaje || "Error desconocido."}`);
       }
     } catch (error) {
       console.error("Error de red:", error);

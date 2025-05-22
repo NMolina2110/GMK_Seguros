@@ -1,20 +1,26 @@
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo2.jpg";
 import '../styles/Usuario.css'; // Estilos
 
 const Cuenta = () => {
   const navigate = useNavigate();
+  const [datosUsuario, setDatosUsuario] = useState(null);
 
-  // Datos simulados del usuario
-  const datosUsuario = {
-    nombre: "Laura Gómez",
-    documento: "1023456789",
-    correo: "laura.gomez@example.com",
-    ciudad: "Bogotá",
-    telefono: "3112345678",
-    perfil: "Usuario",
-  };
+  useEffect(() => {
+  const usuarioGuardado = localStorage.getItem("usuario");
+  if (usuarioGuardado) {
+    setDatosUsuario(JSON.parse(usuarioGuardado));
+  } else {
+    // Si no hay usuario logueado, redirigir a login
+    navigate("/login");
+  }
+}, [navigate]);
 
+if (!datosUsuario) {
+  return <p>Cargando información...</p>;
+}
+ 
   // Productos activos simulados
   const productosActivos = [
     "Póliza de Vida #VID-56789",
@@ -35,12 +41,13 @@ const Cuenta = () => {
 
         <div className="resultado-consulta">
           <h3>Datos Personales</h3>
-          <p><strong>Nombre:</strong> {datosUsuario.nombre}</p>
-          <p><strong>Documento:</strong> {datosUsuario.documento}</p>
+          <p><strong>Nombre:</strong> {datosUsuario.nombres}</p>
+          <p><strong>Documento:</strong> {datosUsuario.numero_identidad}</p>
           <p><strong>Correo:</strong> {datosUsuario.correo}</p>
           <p><strong>Ciudad:</strong> {datosUsuario.ciudad}</p>
           <p><strong>Teléfono:</strong> {datosUsuario.telefono}</p>
-          <p><strong>Perfil:</strong> {datosUsuario.perfil}</p>
+          <p><strong>Perfil:</strong> {datosUsuario.perfil_usuario}</p>
+
         </div>
 
         <div className="resultado-consulta">

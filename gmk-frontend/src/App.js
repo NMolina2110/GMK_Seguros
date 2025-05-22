@@ -27,7 +27,7 @@ function App() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/restablecer" element={<Restablecer />} />
         <Route path="/contacto" element={<Contacto />} />
-        <Route path="/usuario" element={<HomeUsuario />} />
+        <Route path="/homeusuario" element={<HomeUsuario />} />
         <Route path="/seguros/transporte" element={<ConsultaVehiculo />} />
         <Route path="/seguros/vida" element={<ConsultaVida />} />
         <Route path="/cuenta" element={<Cuenta />} />

@@ -1,5 +1,6 @@
-// src/pages/Contacto.jsx
+/// src/pages/Contacto.jsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import "../styles/Usuario.css";
 import logo from "../assets/logo2.jpg";
 
@@ -16,6 +17,8 @@ function Contacto() {
     exito: null
   });
 
+  const esEmailValido = (email) => /\S+@\S+\.\S+/.test(email);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormulario({ ...formulario, [name]: value });
@@ -24,14 +27,18 @@ function Contacto() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación básica
     if (!formulario.nombre || !formulario.email || !formulario.telefono || !formulario.mensaje) {
       setEstado({ mensaje: 'Todos los campos son obligatorios.', exito: false });
       return;
     }
 
+    if (!esEmailValido(formulario.email)) {
+      setEstado({ mensaje: 'Por favor ingresa un correo electrónico válido.', exito: false });
+      return;
+    }
+
     setEstado({ mensaje: 'Enviando mensaje...', exito: null });
-    
+
     try {
       const response = await fetch("http://localhost:3001/api/contacto", {
         method: "POST",
@@ -58,67 +65,67 @@ function Contacto() {
           <img src={logo} alt="Logo GMK" className="logo-img" />
         </div>
         <nav className="nav-links">
-          <a href="/homeempresa">Home</a>
-          <a href="/cuenta">Cuenta</a>
-          <a href="/contacto">Contacto</a>
+          <Link to="/homeempresa">Home</Link>
+          <Link to="/cuenta">Cuenta</Link>
+          <Link to="/contacto">Contacto</Link>
         </nav>
       </header>
 
       <main className="form-container">
-  <h2>Contáctanos</h2>
-  <form onSubmit={handleSubmit}>
-    <div className="form-group">
-      <label htmlFor="nombre">Nombre completo</label>
-      <input
-        type="text"
-        name="nombre"
-        id="nombre"
-        value={formulario.nombre}
-        onChange={handleChange}
-      />
-    </div>
+        <h2>Contáctanos</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="nombre">Nombre completo</label>
+            <input
+              type="text"
+              name="nombre"
+              id="nombre"
+              value={formulario.nombre}
+              onChange={handleChange}
+            />
+          </div>
 
-    <div className="form-group">
-      <label htmlFor="email">Correo electrónico</label>
-      <input
-        type="email"
-        name="email"
-        id="email"
-        value={formulario.email}
-        onChange={handleChange}
-      />
-    </div>
+          <div className="form-group">
+            <label htmlFor="email">Correo electrónico</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={formulario.email}
+              onChange={handleChange}
+            />
+          </div>
 
-    <div className="form-group">
-      <label htmlFor="telefono">Número de teléfono</label>
-      <input
-        type="tel"
-        name="telefono"
-        id="telefono"
-        value={formulario.telefono}
-        onChange={handleChange}
-      />
-    </div>
+          <div className="form-group">
+            <label htmlFor="telefono">Número de teléfono</label>
+            <input
+              type="tel"
+              name="telefono"
+              id="telefono"
+              value={formulario.telefono}
+              onChange={handleChange}
+            />
+          </div>
 
-    <div className="form-group">
-      <label htmlFor="mensaje">Mensaje</label>
-      <textarea
-        name="mensaje"
-        id="mensaje"
-        value={formulario.mensaje}
-        onChange={handleChange}
-      ></textarea>
-    </div>
+          <div className="form-group">
+            <label htmlFor="mensaje">Mensaje</label>
+            <textarea
+              name="mensaje"
+              id="mensaje"
+              value={formulario.mensaje}
+              onChange={handleChange}
+            ></textarea>
+          </div>
 
-    <button type="submit">Enviar mensaje</button>
-  </form>
+          <button type="submit" className="boton-usuario">Enviar mensaje</button>
+        </form>
 
-  {estado.mensaje && (
-    <p className={estado.exito ? "success-message" : "error-message"}>
-      {estado.mensaje}
-    </p>
-  )}
-</main>
+        {estado.mensaje && (
+          <p className={estado.exito ? "success-message" : "error-message"}>
+            {estado.mensaje}
+          </p>
+        )}
+      </main>
     </div>
   );
 }
